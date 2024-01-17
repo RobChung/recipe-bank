@@ -1,0 +1,78 @@
+<div class="row">
+    <div class="col-xs-12">
+        <!-- <form>
+            <div class="row">
+                <div class="col-sm-5 form-group">
+                    <label for="name">Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        class="form-control"
+                        #nameInput>
+                </div>
+                <div class="col-sm-2 form-group">
+                    <label for="quantity">Quantity</label>
+                    <input 
+                        type="number" 
+                        id="quantity" 
+                        class="form-control"
+                        #qtyInput>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button 
+                        class="btn btn-success" 
+                        type="submit"
+                        (click)="onAddIngredient()">Add</button>
+                    <button class="btn btn-danger" type="button">Delete</button>
+                    <button class="btn btn-primary" type="button">Clear</button>
+                </div>
+            </div>
+        </form> -->
+        <form [formGroup]="shoppingListForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-sm-5 form-group">
+                    <label for="name">Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        class="form-control"
+                        formControlName="ingredientName">
+                    <!-- TODO: Display msg if user tries to add -->
+                    <!-- <span > Please enter an ingredient! </span> -->
+                </div>
+                <div class="col-sm-2 form-group">
+                    <label for="quantity">Quantity</label>
+                    <input 
+                        type="number" 
+                        id="quantity" 
+                        class="form-control"
+                        formControlName="quantity">
+                    <span class="help-block"
+                        *ngIf="shoppingListForm.get('quantity').value <= 0"> Please enter a value greater than 0! </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button 
+                        class="btn btn-success" 
+                        type="submit"
+                        [disabled]="!shoppingListForm.valid"> {{ editMode ? 'Update' : 'Add' }}
+                    </button>
+                    <!-- Makes more sense to only display if in editMode vs disabling it -->
+                        <button
+                        *ngIf="editMode"
+                        class="btn btn-danger" 
+                        type="button"
+                        (click)="onDelete()">Delete</button> 
+                    <button
+                        class="btn btn-primary" 
+                        type="button"
+                        (click)="onClear()">Clear
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

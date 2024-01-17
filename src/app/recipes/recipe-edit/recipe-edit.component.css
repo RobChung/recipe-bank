@@ -1,0 +1,14 @@
+/* .col-xs-2 {
+    border: 1px solid red;
+} */
+
+.col-xs-2 > button {
+    /* width: max-content; */
+    font-size: small;
+    margin: 1%;
+}
+
+input.ng-touched.ng-invalid,
+textarea.ng-touched.ng-invalid {
+    border: 1px solid red;
+}
