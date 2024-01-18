@@ -9,6 +9,7 @@ import { AuthService } from "./auth.service";
 export class AuthComponent {
 
     isLoginMode = true;
+    isLoading = false;
     // form: FormGroup;
 
     form = this.fb.group({
@@ -33,7 +34,11 @@ export class AuthComponent {
 
         const email = this.form.value.email;
         const password = this.form.value.password;
-            
+        
+        this.isLoading = true;
+        console.log(this.isLoading)
+        console.log(email)
+
         if (this.isLoginMode) {
             // To implement
         } else {
@@ -41,9 +46,11 @@ export class AuthComponent {
             .subscribe({
                 next: (resp) => {
                   console.log(resp)
+                  this.isLoading = false;
                 },
                 error: (err) => {
                   console.log(err)
+                  this.isLoading = false;
                 }
             })
         }
