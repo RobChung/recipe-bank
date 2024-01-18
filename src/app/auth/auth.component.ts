@@ -31,11 +31,12 @@ export class AuthComponent {
             return;
         }
 
+        const email = this.form.value.email;
+        const password = this.form.value.password;
+            
         if (this.isLoginMode) {
             // To implement
         } else {
-            const email = this.form.value.email;
-            const password = this.form.value.password;
             this.authService.signUp(email, password)
             .subscribe({
                 next: (resp) => {
