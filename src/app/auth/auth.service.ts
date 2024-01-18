@@ -2,14 +2,14 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, throwError } from "rxjs";
 
-// Response payload as required by Firebase API 
-interface AuthResponseData {
-    kind: string;
+// Response payload as described by Firebase API 
+export interface AuthResponseData {
     idToken: string;
     email: string;
     refreshToken: string;
     expiresIn: string;
     localId: string;
+    registered?: boolean; // only exists in Login API
 }
 
 @Injectable({
@@ -53,6 +53,18 @@ export class AuthService {
             }
             return throwError(() => errorMsg);
         }))
+    }
+
+    login(email: string, password: string) {
+        
+        return this.http.post<AuthResponseData>(
+            `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.apiKey}`,
+            {
+                email: email,
+                password: password,
+                returnSecureToken: true
+            }
+        );
     }
 
 }
