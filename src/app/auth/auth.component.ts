@@ -10,6 +10,7 @@ export class AuthComponent {
 
     isLoginMode = true;
     isLoading = false;
+    error: string = null;
     // form: FormGroup;
 
     form = this.fb.group({
@@ -36,8 +37,6 @@ export class AuthComponent {
         const password = this.form.value.password;
         
         this.isLoading = true;
-        console.log(this.isLoading)
-        console.log(email)
 
         if (this.isLoginMode) {
             // To implement
@@ -48,9 +47,21 @@ export class AuthComponent {
                   console.log(resp)
                   this.isLoading = false;
                 },
-                error: (err) => {
-                  console.log(err)
+                error: (errorResp) => {
+                //   console.log(errorResp)
+                  const error = errorResp.error.error;
+                //   console.log(error.message);
                   this.isLoading = false;
+                  // Firebase lists common errors with the sign up email/password API
+                  switch (error.message) {
+                    case 'EMAIL_EXISTS':
+                        this.error = 'This email already exists!'
+                        break;
+                  
+                    default:
+                        this.error = `An unexpected error occurred: ${error.message}`
+                        break;
+                  }
                 }
             })
         }
