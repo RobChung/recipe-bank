@@ -47,21 +47,11 @@ export class AuthComponent {
                   console.log(resp)
                   this.isLoading = false;
                 },
-                error: (errorResp) => {
-                //   console.log(errorResp)
-                  const error = errorResp.error.error;
-                //   console.log(error.message);
+                error: (errorMsg) => {
+                //   console.log(errorMsg)
+                  this.error = errorMsg;
                   this.isLoading = false;
-                  // Firebase lists common errors with the sign up email/password API
-                  switch (error.message) {
-                    case 'EMAIL_EXISTS':
-                        this.error = 'This email already exists!'
-                        break;
-                  
-                    default:
-                        this.error = `An unexpected error occurred: ${error.message}`
-                        break;
-                  }
+
                 }
             })
         }

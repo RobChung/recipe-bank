@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { catchError, throwError } from "rxjs";
 
 // Response payload as required by Firebase API 
 interface AuthResponseData {
@@ -31,7 +32,27 @@ export class AuthService {
                 password: password,
                 returnSecureToken: true
             }
-        );
+        ).pipe(catchError((errorResp) => {
+            const error = errorResp.error.error;
+            let errorMsg = 'An unknown error occurred';
+
+            // Error is not in expected format
+            if (!errorResp) {
+                return throwError(() => errorMsg)
+            }
+
+            // Firebase lists common errors with the sign up email/password API
+            switch (error.message) {
+                case 'EMAIL_EXISTS':
+                    errorMsg = 'This email already exists!'
+                    break;
+                
+                default:
+                    errorMsg = `An unexpected error occurred: ${error.message}`
+                    break;
+            }
+            return throwError(() => errorMsg);
+        }))
     }
 
 }
