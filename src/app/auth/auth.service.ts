@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject, catchError, tap, throwError } from "rxjs";
 import { User } from "./user.model";
+import { Router } from "@angular/router";
 
 // Response payload as described by Firebase API 
 export interface AuthResponseData {
@@ -28,7 +29,9 @@ export class AuthService {
 
     apiKey = 'AIzaSyC31kM-fmuTPIQvrAFyeycA43kuudif4Yg'
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private router: Router) { }
 
     signUp(email: string, password: string) {
         // The request body must include three properties as specified by the API:
@@ -76,6 +79,11 @@ export class AuthService {
                 );
             })
         );
+    }
+
+    logout() {
+        this.user$.next(null);
+        this.router.navigate(['/auth']);
     }
 
     private handleAuthentication(
