@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, Subject, catchError, tap, throwError } from "rxjs";
+import { BehaviorSubject, Observable, Subject, catchError, tap, throwError } from "rxjs";
 import { User } from "./user.model";
 
 // Response payload as described by Firebase API 
@@ -19,7 +19,12 @@ export interface AuthResponseData {
 export class AuthService {
 
     // when we have a user, we will emit (next) it, etc
-    user$ = new Subject<User>()
+    // user$ = new Subject<User>()
+    // we want an on-demand fetching of a user data, 
+    // as Subject is good for reactively updating the UI
+    // BehaviorSubject holds a value, when subscribed to, emits it immediately
+    user$ = new BehaviorSubject<User>(null);
+
 
     apiKey = 'AIzaSyC31kM-fmuTPIQvrAFyeycA43kuudif4Yg'
 

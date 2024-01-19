@@ -7,11 +7,12 @@
  * However, we will handle it here just to easily focus on requests in this file.
  */
 
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Recipe } from "../recipes/recipe.model";
 import { RecipeService } from "../recipes/service/recipe.service";
-import { map, tap } from "rxjs";
+import { exhaustMap, map, take, tap } from "rxjs";
+import { AuthService } from "../auth/auth.service";
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +24,8 @@ export class DataStorageService {
 
     constructor(
         private http: HttpClient,
-        private recipesService: RecipeService) { }
+        private recipesService: RecipeService,
+        private authService: AuthService) { }
 
     // storeRecipes(recipes: Recipe[]) {
     storeRecipes() {
@@ -75,16 +77,27 @@ export class DataStorageService {
         })
     }
 
-    // Where do we subscribe --> where are we interested in the response? We aren't interested in the HeaderComponent
-    // We will subscribe to it here, and use the RecipeService we injected to set the recipes.
+
     fetchRecipes() {
-        return this.http
-            .get<Recipe[]>(this.dbUrl + this.suffixUrl)
-            // Right now, we can add a recipe without ingredients. This means in Firebase, the ingredients property on
-            // a Recipe does not exist, which can potentially give us nasty bugs. To resolve
-            // this, we can always ensure this property exist, even if it is an empty array.
-            // So, we will pipe() then use map() to transform the data
+
+        // To prevent an ongoing subscription, use take() operator
+        // pass 1 to indicate we want to take 1 value from the observable, then unsubscribe
+        // Since we are working with two observables that need to be returned, will use exhaustMap()
+        return this.authService.user$
             .pipe(
+                take(1),
+                // get data from previous observable (user)
+                exhaustMap((user) => {
+                  // then return a new observable that replaces previous in this whole chain
+                  return this.http
+                    .get<Recipe[]>(
+                        this.dbUrl + this.suffixUrl,
+                        // Firebase's Real-time DB requires the token as a queryParam
+                        {
+                            params: new HttpParams().set('auth', user.token)
+                        }
+                    )
+                }),
                 map((recipes) => {
                     // this map() is JS array method
                     // map() allows us to transform the elements in an array (in this casse, ingredients)
@@ -101,8 +114,9 @@ export class DataStorageService {
                 tap((recipes) => {
                     this.recipesService.setRecipes(recipes);
                 })
-            
             )
+
+
             // .subscribe((recipes) => {
             //     // console.log(recipes);
             //     // this.recipesService.setRecipes(recipes);

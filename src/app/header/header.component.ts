@@ -30,8 +30,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
             // this.isAuthenticated = !user ? false : true;
             // above can be written as
             this.isAuthenticated = !!user;
-            console.log(!user);
-            console.log(!!user);
+            // console.log(!user);
+            // console.log(!!user);
         });
 
     }
