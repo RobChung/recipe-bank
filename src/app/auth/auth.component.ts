@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AuthResponseData, AuthService } from "./auth.service";
 import { Observable } from "rxjs";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'app-auth',
@@ -21,7 +22,8 @@ export class AuthComponent {
     })
     constructor(
         private fb: FormBuilder,
-        private authService: AuthService) { }
+        private authService: AuthService,
+        private router: Router) { }
 
     switchMode() {
         this.isLoginMode = !this.isLoginMode
@@ -52,6 +54,7 @@ export class AuthComponent {
             next: (resp) => {
                 console.log(resp);
                 this.isLoading = false;
+                this.router.navigate(['/recipes']);
             },
             error: (errorMsg) => {
                 console.log(errorMsg)
