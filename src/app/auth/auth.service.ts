@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError, throwError } from "rxjs";
+import { Observable, Subject, catchError, tap, throwError } from "rxjs";
+import { User } from "./user.model";
 
 // Response payload as described by Firebase API 
 export interface AuthResponseData {
@@ -17,11 +18,13 @@ export interface AuthResponseData {
 })
 export class AuthService {
 
+    // when we have a user, we will emit (next) it, etc
+    user$ = new Subject<User>()
+
     apiKey = 'AIzaSyC31kM-fmuTPIQvrAFyeycA43kuudif4Yg'
 
     constructor(private http: HttpClient) { }
 
-    // Consider an interface?
     signUp(email: string, password: string) {
         // The request body must include three properties as specified by the API:
         // email, password, returnSecureToken
@@ -33,7 +36,25 @@ export class AuthService {
                 returnSecureToken: true
             }
         ).pipe(
-            catchError(this.handleError) // See catchError in login for another approach
+            catchError(this.handleError), // See catchError in login for other syntax/approach
+            tap((resData) => {
+              // the expiration date is not part of the resp, so we will create it, and it 
+              // also needs to be based on the Firebase response we receive
+                // this should be the number of seconds for which it will expire, as a string
+              // get the current date, call getTime() to get current timestamp in milliseconds
+              // then add the response's expiresIn payload in milliseconds
+                // don't forget to convert the string to a number before adding
+              // then back to a Date object for a concrete timestamp, so wrap it all in new Date()
+              const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 1000);
+              const user = new User(
+                resData.email,
+                resData.localId,
+                resData.idToken,
+                expirationDate
+              );
+              // emit the currently logged in User
+              this.user$.next(user);
+            })
         );
     }
 
