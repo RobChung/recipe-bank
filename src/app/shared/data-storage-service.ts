@@ -27,7 +27,6 @@ export class DataStorageService {
         private recipesService: RecipeService,
         private authService: AuthService) { }
 
-    // storeRecipes(recipes: Recipe[]) {
     storeRecipes() {
         const recipes = this.recipesService.getRecipes();
         this.http.put(
@@ -79,25 +78,11 @@ export class DataStorageService {
 
 
     fetchRecipes() {
-
-        // To prevent an ongoing subscription, use take() operator
-        // pass 1 to indicate we want to take 1 value from the observable, then unsubscribe
-        // Since we are working with two observables that need to be returned, will use exhaustMap()
-        return this.authService.user$
+        return this.http
+            .get<Recipe[]>(
+                this.dbUrl + this.suffixUrl
+            )
             .pipe(
-                take(1),
-                // get data from previous observable (user)
-                exhaustMap((user) => {
-                  // then return a new observable that replaces previous in this whole chain
-                  return this.http
-                    .get<Recipe[]>(
-                        this.dbUrl + this.suffixUrl,
-                        // Firebase's Real-time DB requires the token as a queryParam
-                        {
-                            params: new HttpParams().set('auth', user.token)
-                        }
-                    )
-                }),
                 map((recipes) => {
                     // this map() is JS array method
                     // map() allows us to transform the elements in an array (in this casse, ingredients)
