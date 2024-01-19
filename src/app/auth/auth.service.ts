@@ -38,22 +38,12 @@ export class AuthService {
         ).pipe(
             catchError(this.handleError), // See catchError in login for other syntax/approach
             tap((resData) => {
-              // the expiration date is not part of the resp, so we will create it, and it 
-              // also needs to be based on the Firebase response we receive
-                // this should be the number of seconds for which it will expire, as a string
-              // get the current date, call getTime() to get current timestamp in milliseconds
-              // then add the response's expiresIn payload in milliseconds
-                // don't forget to convert the string to a number before adding
-              // then back to a Date object for a concrete timestamp, so wrap it all in new Date()
-              const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 1000);
-              const user = new User(
-                resData.email,
-                resData.localId,
-                resData.idToken,
-                expirationDate
-              );
-              // emit the currently logged in User
-              this.user$.next(user);
+                this.handleAuthentication(
+                    resData.email, 
+                    resData.localId, 
+                    resData.idToken, 
+                    +resData.expiresIn
+                );
             })
         );
     }
@@ -71,11 +61,40 @@ export class AuthService {
             catchError(((error) => {
                 console.log(error)
               return this.handleError(error)
-            }))
-            // catchError(this.handleError)
+            })),
+            tap((resData) => {
+                this.handleAuthentication(
+                    resData.email, 
+                    resData.localId, 
+                    resData.idToken, 
+                    +resData.expiresIn
+                );
+            })
         );
     }
 
+    private handleAuthentication(
+        email: string, 
+        id: string, 
+        token: string, 
+        expiresIn: number) {
+        // the expiration date is not part of the resp, so we will create it, and it 
+        // also needs to be based on the Firebase response we receive
+        // this should be the number of seconds for which it will expire, as a string
+        // get the current date, call getTime() to get current timestamp in milliseconds
+        // then add the response's expiresIn payload in milliseconds
+        // don't forget to convert the string to a number before adding
+        // then back to a Date object for a concrete timestamp, so wrap it all in new Date()
+        const expirationDate = new Date(new Date().getTime() + +expiresIn * 1000);
+        const user = new User(
+            email,
+            id,
+            token,
+            expirationDate
+        );
+        // emit the currently logged in User
+        this.user$.next(user);
+    }
 
     // Function to handle error responses received from Http Requests
     private handleError(errorResp: HttpErrorResponse) {
