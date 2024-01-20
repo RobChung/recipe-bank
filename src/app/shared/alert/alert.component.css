@@ -1,0 +1,28 @@
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75); /* Transparent Black */
+    z-index: 50; /* Layered above other elements */
+}
+
+.alert-box {
+    position: fixed;
+    top: 30vh;
+    left: 20vw;
+    width: 60vw; /* 20 to the left, 20 to the right makes this more centered */
+    padding: 16px;
+    z-index: 100; /* Above the backdrop */
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+/* .alert-box > p {
+    text-align: center;
+} */
+
+.alert-box-actions {
+    text-align: right;
+}
