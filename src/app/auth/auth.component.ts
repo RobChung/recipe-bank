@@ -60,10 +60,13 @@ export class AuthComponent {
                 console.log(errorMsg)
                 this.error = errorMsg;
                 this.isLoading = false;
-
             }
         })
 
         this.form.reset();
+    }
+
+    onCloseAlert() {
+        this.error = null;
     }
 }
