@@ -25,7 +25,7 @@ export class AuthService {
     // as Subject is good for reactively updating the UI
     // BehaviorSubject holds a value, when subscribed to, emits it immediately
     user$ = new BehaviorSubject<User>(null);
-
+    private tokenExpirationTimer: any;
 
     apiKey = 'AIzaSyC31kM-fmuTPIQvrAFyeycA43kuudif4Yg'
 
@@ -84,6 +84,12 @@ export class AuthService {
     logout() {
         this.user$.next(null);
         this.router.navigate(['/auth']);
+        localStorage.removeItem('userData');
+        // Ensure the expiration timer doesn't persist upon logging out
+        if (this.tokenExpirationTimer) {
+            clearTimeout(this.tokenExpirationTimer);
+        }
+        this.tokenExpirationTimer = null;
     }
 
     autoLogin() {
@@ -109,7 +115,21 @@ export class AuthService {
         if (loadedUser.token) {
             // emit this user
             this.user$.next(loadedUser);
+            // Calculate the remaining time
+            const remainingTime = 
+                new Date(userData._tokenExpirationDate).getTime() 
+                - new Date().getTime()
+            this.autoLogout(remainingTime);
+            console.log(remainingTime);
         }
+    }
+
+    // Set and manage a timer to log user out
+    // Should be called whenever we emit a User to our app (use of the Subject)
+    autoLogout(expirationDuration: number) {
+        this.tokenExpirationTimer = setTimeout(() => {
+          this.logout();
+        }, expirationDuration)
     }
 
     private handleAuthentication(
@@ -117,13 +137,14 @@ export class AuthService {
         id: string, 
         token: string, 
         expiresIn: number) {
-        // the expiration date is not part of the resp, so we will create it, and it 
-        // also needs to be based on the Firebase response we receive
-        // this should be the number of seconds for which it will expire, as a string
-        // get the current date, call getTime() to get current timestamp in milliseconds
-        // then add the response's expiresIn payload in milliseconds
-        // don't forget to convert the string to a number before adding
-        // then back to a Date object for a concrete timestamp, so wrap it all in new Date()
+        // the expiration date is not part of the resp, so we will create it,
+        // and it also needs to be based on the Firebase response we receive
+        // this should be the number of seconds for which it will expire,
+        // as a string get the current date, call getTime() to get 
+        // current timestamp in milliseconds then add the response's expiresIn
+        // payload in milliseconds
+        // convert the string to a number before adding, then convert back 
+        // to a Date object for a concrete timestamp, so wrap it all in new Date()
         const expirationDate = new Date(new Date().getTime() + +expiresIn * 1000);
         const user = new User(
             email,
@@ -133,6 +154,7 @@ export class AuthService {
         );
         // emit the currently logged in User
         this.user$.next(user);
+        this.autoLogout(expiresIn * 1000) // Convert to ms
         // To allow persistence, convert JS object to a string
         localStorage.setItem('userData', JSON.stringify(user));
     }
