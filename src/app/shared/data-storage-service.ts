@@ -83,20 +83,23 @@ export class DataStorageService {
                 this.dbUrl + this.suffixUrl
             )
             .pipe(
-                map((recipes) => {
-                    // this map() is JS array method
-                    // map() allows us to transform the elements in an array (in this casse, ingredients)
-                    // for every recipe, we return the transformed recipe
-                    return recipes.map((recipe) => {
-                        return {
+                map((recipes) => recipes 
+                    // return the recipes array if exists
+                    ? recipes.map((recipe) => ({
+                        // return {
                             // copy all the properties of recipe (all the existing data)
                             ...recipe,
                             // check if ingredients exist, if true set it to the ingredients, otherwise an empty array 
                             ingredients: recipe.ingredients ? recipe.ingredients : []
-                        }
-                    })
-                }),
+                        // }
+                    }))
+                    // return an empty recipes array if none found in db
+                    : []
+                ),
                 tap((recipes) => {
+                    if (recipes.length < 1) {
+                        alert('No recipes to fetch!');
+                    }
                     this.recipesService.setRecipes(recipes);
                 })
             )

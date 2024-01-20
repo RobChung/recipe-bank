@@ -29,7 +29,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         this.recipes = recipes;
     });
     // Using Firebase, this returns nothing as we removed the dummy data. 
-    // Use the DataService to fetch dynamically; see code below (makes fetch button uesless tho)
+    // Use the DataService to fetch dynamically; see code below (makes fetch button useless tho)
     this.recipes = this.recipeService.getRecipes();
 
     // don't forget to subscribe to receive the data
