@@ -31,8 +31,11 @@ import { RecipesModule } from './recipes/recipe.modules';
     // FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule,
-    RecipesModule
+    RecipesModule,
+    // Since this app has a wildcard route, this must be imported last
+    // This is because route arrays from other routing modules are concatenated
+    // in order with regards to how their related routing modules are imported
+    AppRoutingModule 
   ],
   providers: [
     // ShoppingListService -> added argument in Injectable()
