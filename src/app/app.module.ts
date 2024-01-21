@@ -8,26 +8,25 @@ import { SharedModule } from './shared/shared.module';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { AuthComponent } from './auth/auth.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
-    AuthComponent
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
-    // FormsModule,
     HttpClientModule,
     RecipesModule,
     ShoppingListModule,
+    SharedModule,
+    AuthModule,
     // Since this app has a wildcard route, this must be imported last
     // This is because route arrays from other routing modules are concatenated
     // in order with regards to how their related routing modules are imported
     AppRoutingModule,
-    SharedModule
   ],
   providers: [
     // ShoppingListService -> added argument in Injectable()
