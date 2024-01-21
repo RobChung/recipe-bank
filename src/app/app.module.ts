@@ -8,20 +8,15 @@ import { ShoppingListModule } from './shopping-list/shopping-list.module';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { DropdownDirective } from './shared/dropdown.directive';
 import { AuthComponent } from './auth/auth.component';
-import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
-import { AlertComponent } from './shared/alert/alert.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    DropdownDirective,
-    AuthComponent,
-    LoadingSpinnerComponent,
-    AlertComponent
+    AuthComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +28,8 @@ import { AlertComponent } from './shared/alert/alert.component';
     // Since this app has a wildcard route, this must be imported last
     // This is because route arrays from other routing modules are concatenated
     // in order with regards to how their related routing modules are imported
-    AppRoutingModule 
+    AppRoutingModule,
+    SharedModule
   ],
   providers: [
     // ShoppingListService -> added argument in Injectable()
