@@ -3,6 +3,10 @@ import { RouterModule, Routes } from "@angular/router";
 
 const appRoutes: Routes = [
     { path: '', redirectTo: '/recipes', pathMatch: 'full' },
+    { 
+        path: 'recipes', 
+        loadChildren: () => import('./recipes/recipe.modules').then(m => m.RecipesModule) 
+    },
     { path: '**', redirectTo: '/recipes'}
 ];
 
