@@ -50,7 +50,10 @@
                         class="form-control"
                         formControlName="quantity">
                     <span class="help-block"
-                        *ngIf="shoppingListForm.get('quantity').value <= 0"> Please enter a value greater than 0! </span>
+                          *ngIf="shoppingListForm.get('quantity').value <= 0 
+                          && shoppingListForm.get('quantity').touched"> 
+                            Please enter a value greater than 0! 
+                    </span>
                 </div>
             </div>
             <div class="row">
