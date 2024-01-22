@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject, catchError, tap, throwError } from "rxjs";
 import { User } from "./user.model";
 import { Router } from "@angular/router";
+import { environment } from "src/environments/environment.development";
 
 // Response payload as described by Firebase API 
 export interface AuthResponseData {
@@ -27,7 +28,7 @@ export class AuthService {
     user$ = new BehaviorSubject<User>(null);
     private tokenExpirationTimer: any;
 
-    apiKey = 'AIzaSyC31kM-fmuTPIQvrAFyeycA43kuudif4Yg'
+    apiKey = environment.firebaseAPIKey;
 
     constructor(
         private http: HttpClient,
