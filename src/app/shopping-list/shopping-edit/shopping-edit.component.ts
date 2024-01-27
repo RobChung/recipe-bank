@@ -4,6 +4,9 @@ import { Ingredient } from 'src/app/shared/ingredient.model';
 import { ShoppingListService } from '../service/shopping-list.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import * as ShoppingListActions from '../store/shopping-list.actions'
+// import { AddIngredient } from '../store/shopping-list.actions';
 
 @Component({
   selector: 'app-shopping-edit',
@@ -11,20 +14,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./shopping-edit.component.css']
 })
 export class ShoppingEditComponent implements OnInit {
-  // We will output these properties to our shopping-list component
-  // @Output() name: string;
-  // @Output() qty: number;
 
-  // Below no longer required using Angular Forms
-  // @ViewChild('nameInput', {static:true}) nameInputRef: ElementRef;
-  // @ViewChild('qtyInput', {static:true}) qtyInputRef: ElementRef;
-
-  // Need to pass to parent component (list), new event required
-  // will pass an ingredient object, consisting of name and qty
-    // No longer necessary with Service class
-  // @Output() ingredientAdded = new EventEmitter<Ingredient>();
-
-  // isDisabled: boolean = false;
   subscription: Subscription;
   editMode = false;
   editedItemIndex: number;
@@ -37,7 +27,8 @@ export class ShoppingEditComponent implements OnInit {
 
   constructor(
     private shoppingListService: ShoppingListService,
-    private fb: FormBuilder) {}
+    private fb: FormBuilder,
+    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>) {}
 
   ngOnInit() {
     this.subscription = this.shoppingListService.startedEditing
@@ -55,6 +46,7 @@ export class ShoppingEditComponent implements OnInit {
       });
   }
 
+  // Not implemented
   onAddIngredient() {
     // const name = this.nameInputRef.nativeElement.value;
     // const qty = this.qtyInputRef.nativeElement.value;
@@ -81,7 +73,8 @@ export class ShoppingEditComponent implements OnInit {
         this.shoppingListService.editIngredient(newIngredient, this.editedItemIndex);
 
       } else {
-        this.shoppingListService.addIngredient(newIngredient);
+        // this.shoppingListService.addIngredient(newIngredient);
+        this.store.dispatch(ShoppingListActions.addIngredient({ingredient: newIngredient}))
       }
 
       // console.log(this.editedItemIndex);
