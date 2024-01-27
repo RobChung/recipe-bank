@@ -7,3 +7,8 @@ export const addIngredient = createAction(
     '[ShoppingList] Add Ingredient',
     props<{ ingredient: Ingredient }>() 
 );
+
+export const addIngredients = createAction(
+    '[ShoppingList] Add Ingredients',
+    props<{ ingredients: Ingredient[] }>()
+);
