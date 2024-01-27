@@ -4,7 +4,7 @@
             <!-- Code commented out as our initial nav bar is not responsive. By 
             adding a Hamburger Menu when a window resizes, this is resolved. -->
             <!-- <a href="#" class="navbar-brand">Recipe Bank</a> -->
-            <button type="button" class="navbar-toggle bi-list" 
+            <button type="button" class="navbar-toggle" [ngClass]="collapsed ? 'bi-chevron-down' : 'bi-chevron-up'"
             (click)="collapsed = !collapsed"></button>
             <a routerLink="" class="navbar-brand">Recipe Bank</a>
         </div>
