@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { Ingredient } from 'src/app/shared/ingredient.model';
 import { RecipeService } from '../service/recipe.service';
 import { Recipe } from '../recipe.model';
-import { ShoppingListService } from 'src/app/shopping-list/service/shopping-list.service';
 import { DataStorageService } from 'src/app/shared/data-storage-service';
 
 @Component({

@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Ingredient } from '../shared/ingredient.model';
-import { ShoppingListService } from './service/shopping-list.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-// import { selectShoppingList } from './store/shopping-list.selectors';
+import * as ShoppingListActions from '../shopping-list/store/shopping-list.actions';
+import * as fromShoppingList from './store/shopping-list.reducer'
 
 @Component({
   selector: 'app-shopping-list',
@@ -19,11 +19,8 @@ export class ShoppingListComponent implements OnInit {
   // private subscription: Subscription;
   
   constructor(
-    private shoppingListService: ShoppingListService,
-    // shoppingList is the key we defined in appModule
-    // ingredient is the key we defined in the reducer
-    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
-    ) { }
+    private store: Store<fromShoppingList.AppState>
+  ) { }
 
   ngOnInit() {
     // this.ingredients = this.shoppingListService.getIngredients();
@@ -37,18 +34,11 @@ export class ShoppingListComponent implements OnInit {
     this.ingredients$ = this.store.select('shoppingList');
   }
 
-  // ngOnDestroy(): void {
-  //   this.subscription.unsubscribe();
-  // }
-  // Doing this in our Service
-  // onAddToList(ingredient: Ingredient) {
-  //   this.ingredients.push(ingredient)
-  // }
-
   // To get this to the EDIT component, we will create a Subject
   // in the Service so that we can listen in the EDIT component
   onEditItem(index: number) {
-    this.shoppingListService.startedEditing.next(index);
+    // this.shoppingListService.startedEditing.next(index);
+    this.store.dispatch(ShoppingListActions.startEdit({ index: index }));
   }
 
 }
