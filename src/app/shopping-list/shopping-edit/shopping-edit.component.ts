@@ -18,7 +18,7 @@ export class ShoppingEditComponent implements OnInit {
   editedItemIndex: number;
   editedItem: Ingredient;
 
-  shoppingListForm = this.fb.group({
+  shoppingListForm = this.fb.nonNullable.group({
       ingredientName: ['', Validators.required],
       quantity: [1, Validators.min(1)]
   });
@@ -110,6 +110,10 @@ export class ShoppingEditComponent implements OnInit {
     onClear() {
       this.shoppingListForm.reset();
       this.editMode = false;
+      // Notify the store we want to stop editing,
+      // and clear any values we are keeping in state
+      // this.store.dispatch(ShoppingListActions.stopEdit());
+
       // oops only meant to clear form??
       // this.shoppingListService.clearShoppingList();
     }

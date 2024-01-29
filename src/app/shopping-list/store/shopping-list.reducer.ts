@@ -45,7 +45,7 @@ export const shoppingListReducer = createReducer(
     )),
 
     on(ShoppingListActions.updateIngredient, (state, { ingredient }) => (
-        console.log(state.editedIngredientIndex, ingredient),
+        // console.log(state.editedIngredientIndex, ingredient),
         {
             // const ingredientToBeUpdated = state.ingredients[state.editedIngredientIndex];
             // const updatedIngredient = {
@@ -101,5 +101,13 @@ export const shoppingListReducer = createReducer(
             ...state,
             editedIngredientIndex: index
         }
+    )),
+
+    on(ShoppingListActions.stopEdit, (state) => (
+        {
+            ...state,
+            editedIngredientIndex: -1
+        }
+
     ))
 )
