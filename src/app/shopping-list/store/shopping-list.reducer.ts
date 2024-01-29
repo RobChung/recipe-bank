@@ -3,11 +3,6 @@ import { Ingredient } from "../../shared/ingredient.model";
 // import { AddIngredient } from "./shopping-list.actions";
 import * as ShoppingListActions from '../store/shopping-list.actions'
 
-
-export interface AppState {
-    shoppingList: State;
-}
-
 // How the state for this reducer looks like
 export interface State {
     ingredients: Ingredient[];

@@ -4,7 +4,8 @@ import { Store } from '@ngrx/store';
 import { Ingredient } from 'src/app/shared/ingredient.model';
 import { Subscription } from 'rxjs';
 import * as ShoppingListActions from '../store/shopping-list.actions'
-import * as fromShoppingList from '../store/shopping-list.reducer'
+// import * as fromShoppingList from '../store/shopping-list.reducer'
+import * as fromApp from '../../store/app.reducer';
 
 @Component({
   selector: 'app-shopping-edit',
@@ -18,6 +19,7 @@ export class ShoppingEditComponent implements OnInit {
   editedItemIndex: number;
   editedItem: Ingredient;
 
+  // nonNullable allows for default values to be set upon reset()
   shoppingListForm = this.fb.nonNullable.group({
       ingredientName: ['', Validators.required],
       quantity: [1, Validators.min(1)]
@@ -25,22 +27,9 @@ export class ShoppingEditComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store<fromShoppingList.AppState>) {}
+    private store: Store<fromApp.AppState>) {}
 
   ngOnInit() {
-    // this.subscription = this.shoppingListService.startedEditing
-    //   .subscribe((index: number) => {
-    //     this.editedItemIndex = index;
-    //     // console.log(this.editedItemIndex)
-    //     this.editMode = true;
-    //     this.editedItem = this.shoppingListService.getIngredient(index);
-
-    //     // Now we want to setValue on the input fields
-    //     this.shoppingListForm.setValue({
-    //       ingredientName: this.editedItem.name,
-    //       quantity: this.editedItem.quantity
-    //     });
-    //   });
       this.subscription = this.store
         .select('shoppingList')
         .subscribe((stateData) => {
