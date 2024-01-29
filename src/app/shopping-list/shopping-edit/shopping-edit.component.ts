@@ -112,7 +112,7 @@ export class ShoppingEditComponent implements OnInit {
       this.editMode = false;
       // Notify the store we want to stop editing,
       // and clear any values we are keeping in state
-      // this.store.dispatch(ShoppingListActions.stopEdit());
+      this.store.dispatch(ShoppingListActions.stopEdit());
 
       // oops only meant to clear form??
       // this.shoppingListService.clearShoppingList();
@@ -120,5 +120,6 @@ export class ShoppingEditComponent implements OnInit {
 
     ngOnDestroy() {
       this.subscription.unsubscribe();
+      this.store.dispatch(ShoppingListActions.stopEdit());
     }
 }
