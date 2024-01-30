@@ -3,6 +3,8 @@ import { DataStorageService } from "../shared/data-storage-service";
 import { AuthService } from "../auth/auth.service";
 import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
+import * as fromApp from "../store/app.reducer";
 
 @Component({
     selector: 'app-header',
@@ -22,18 +24,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     constructor(
         private dataService: DataStorageService,
-        private authService: AuthService) { }
+        private authService: AuthService,
+        private store: Store<fromApp.AppState>) { }
 
     ngOnInit() {
         // Setup a subscription to the AuthService's User
         // Our single source of truth for our User resides in that class (the Subject)
-        this.userSubscription = this.authService.user$.subscribe((user) => {
-            // this.isAuthenticated = !user ? false : true;
-            // above can be written as
-            this.isAuthenticated = !!user;
-            // console.log(!user);
-            // console.log(!!user);
-        });
+        // this.userSubscription = this.authService.user$.subscribe((user) => {
+        this.userSubscription = this.store.select('auth').subscribe(
+            (stateData) => {
+                this.isAuthenticated = !!stateData.user;
+            }
+        );
 
     }
 

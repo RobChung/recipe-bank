@@ -1,7 +1,9 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivateChildFn, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
 import { Observable, map, take, tap } from "rxjs";
+import { Store } from "@ngrx/store";
 import { AuthService } from "./auth.service";
+import * as fromApp from "../store/app.reducer";
 
 export const authGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,
@@ -12,9 +14,14 @@ export const authGuard: CanActivateFn = (
     | UrlTree => {
     const authService = inject(AuthService);
     const router = inject(Router);
+    const store = inject(Store<fromApp.AppState>);
 
-    return authService.user$.pipe(
+    return store.select('auth').pipe(
         take(1), // Ensure we don't have an ongoing subscription
+        // We want just the user prop in the Auth State
+        map((authState) => {
+          return authState.user;
+        }),
         map((user) => {
             // user -> object, obviously
             // !user -> if it is an object, return false

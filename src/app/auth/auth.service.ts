@@ -4,6 +4,9 @@ import { BehaviorSubject, Observable, Subject, catchError, tap, throwError } fro
 import { User } from "./user.model";
 import { Router } from "@angular/router";
 import { environment } from "src/environments/environment.development";
+import * as fromApp from "../store/app.reducer";
+import * as AuthActions from "./store/auth.actions";
+import { Store } from "@ngrx/store";
 
 // Response payload as described by Firebase API 
 export interface AuthResponseData {
@@ -25,14 +28,15 @@ export class AuthService {
     // we want an on-demand fetching of a user data, 
     // as Subject is good for reactively updating the UI
     // BehaviorSubject holds a value, when subscribed to, emits it immediately
-    user$ = new BehaviorSubject<User>(null);
+    // user$ = new BehaviorSubject<User>(null);
     private tokenExpirationTimer: any;
 
     apiKey = environment.firebaseAPIKey;
 
     constructor(
         private http: HttpClient,
-        private router: Router) { }
+        private router: Router,
+        private store: Store<fromApp.AppState>) { }
 
     signUp(email: string, password: string) {
         // The request body must include three properties as specified by the API:
@@ -83,7 +87,8 @@ export class AuthService {
     }
 
     logout() {
-        this.user$.next(null);
+        // this.user$.next(null);
+        this.store.dispatch(AuthActions.logout())
         this.router.navigate(['/auth']);
         localStorage.removeItem('userData');
         // Ensure the expiration timer doesn't persist upon logging out
@@ -115,7 +120,8 @@ export class AuthService {
         
         if (loadedUser.token) {
             // emit this user
-            this.user$.next(loadedUser);
+            // this.user$.next(loadedUser);
+            this.store.dispatch(AuthActions.login({user: loadedUser}));
             // Calculate the remaining time
             const remainingTime = 
                 new Date(userData._tokenExpirationDate).getTime() 
@@ -154,7 +160,8 @@ export class AuthService {
             expirationDate
         );
         // emit the currently logged in User
-        this.user$.next(user);
+        // this.user$.next(user);
+        this.store.dispatch(AuthActions.login({ user: user }));
         this.autoLogout(expiresIn * 1000) // Convert to ms
         // To allow persistence, convert JS object to a string
         localStorage.setItem('userData', JSON.stringify(user));
