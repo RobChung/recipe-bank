@@ -4,10 +4,14 @@ import * as AuthActions from "./auth.actions";
 
 export interface State {
     user: User;
+    authError: string;
+    loading: boolean;
 }
 
 const initialState: State = {
-    user: null
+    user: null,
+    authError: null,
+    loading: false
 }
 
 export const authReducer = createReducer(
@@ -16,12 +20,15 @@ export const authReducer = createReducer(
     // Both login and signup will be utilizing similar logic
     // after making the http request
     on(
-        AuthActions.login,
+        AuthActions.loginStart,
         // AuthActions.signup,
-        (state, { user }) => ({
+        (state) => ({
             ...state,
             // user: new User(email, userId, token, expirationDate)
-            user: user
+            // user: user,
+            authError: null,
+            // While the response is awaiting for success/failure, should display loading icon
+            loading: true
         })
     ),
 
@@ -29,6 +36,37 @@ export const authReducer = createReducer(
         AuthActions.logout, (state) => ({
             ...state,
             user: null
+        })
+    ),
+
+    // on(
+    //     AuthActions.authenticateSuccess, (state, {email, id, token, tokenExpirationDate}) => ({
+    //         ...state,
+    //         user: new User(
+    //             email,
+    //             id,
+    //             token,
+    //             tokenExpirationDate
+    //         ),
+    //         authError: null
+    //     })
+    // )
+
+    on(
+        AuthActions.authenticateSuccess, (state, {user}) => ({
+            ...state,
+            user: user,
+            authError: null,
+            loading: false
+        })
+    ),
+
+    on(
+        AuthActions.authenticateFail, (state, {errorMsg}) => ({
+            ...state,
+            user: null,
+            authError: errorMsg,
+            loading: false
         })
     )
 )

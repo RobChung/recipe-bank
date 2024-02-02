@@ -1,25 +1,12 @@
 import { createAction, props } from "@ngrx/store";
 import { User } from "../user.model";
 
-// export const login = createAction(
-//     '[Auth] Login',
-//     props<{ 
-//         // there isn't a password prop associated with a user
-//         // user: User
-//         email: string;
-//         password: string;
-//     }>()
-// )
-
-export const login = createAction(
-    '[Auth] Login',
+// The point in where we want to start sending our request
+export const loginStart = createAction(
+    '[Auth] Login Start',
     props<{ 
-        // there isn't a password prop associated with a user
-        user: User
-        // email: string;
-        // userId: string;
-        // token: string;
-        // expirationDate: Date;
+        email: string;
+        password: string;
     }>()
 )
 
@@ -38,11 +25,17 @@ export const logout = createAction(
 
 export const authenticateSuccess = createAction(
     '[Auth] Auth Success',
-    // Need the props of our User object
     props<{
-        email: string;
-        id: string;
-        _token: string;
-        _tokenExpirationDate: Date;
+        // email: string;
+        // id: string;
+        // token: string;
+        // tokenExpirationDate: Date;
+        
+        user: User
     }>()
+)
+
+export const authenticateFail = createAction(
+    '[Auth] Auth Fail',
+    props<{ errorMsg: string }>()
 )

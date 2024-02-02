@@ -11,6 +11,8 @@ import { StoreModule } from '@ngrx/store';
 import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
 import { authReducer } from './auth/store/auth.reducer';
 import * as fromApp from './store/app.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './auth/store/auth.effects';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import * as fromApp from './store/app.reducer';
     // This is because route arrays from other routing modules are concatenated
     // in order with regards to how their related routing modules are imported
     AppRoutingModule,
-    StoreModule.forRoot(fromApp.appReducer)
+    StoreModule.forRoot(fromApp.appReducer),
+    EffectsModule.forRoot([AuthEffects])
   ],
   providers: [
     // ShoppingListService -> added argument in Injectable()

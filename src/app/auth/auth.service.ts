@@ -121,7 +121,7 @@ export class AuthService {
         if (loadedUser.token) {
             // emit this user
             // this.user$.next(loadedUser);
-            this.store.dispatch(AuthActions.login({user: loadedUser}));
+            // this.store.dispatch(AuthActions.login({user: loadedUser}));
             // Calculate the remaining time
             const remainingTime = 
                 new Date(userData._tokenExpirationDate).getTime() 
@@ -161,7 +161,7 @@ export class AuthService {
         );
         // emit the currently logged in User
         // this.user$.next(user);
-        this.store.dispatch(AuthActions.login({ user: user }));
+        // this.store.dispatch(AuthActions.login({ user: user }));
         this.autoLogout(expiresIn * 1000) // Convert to ms
         // To allow persistence, convert JS object to a string
         localStorage.setItem('userData', JSON.stringify(user));
