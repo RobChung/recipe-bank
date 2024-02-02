@@ -11,7 +11,7 @@ import * as fromApp from "../store/app.reducer";
     selector: 'app-auth',
     templateUrl: './auth.component.html'
 })
-export class AuthComponent implements OnInit, OnDestroy{
+export class AuthComponent implements OnInit, OnDestroy {
 
     isLoginMode = true;
     isLoading = false;
@@ -46,7 +46,6 @@ export class AuthComponent implements OnInit, OnDestroy{
     }
 
     onSubmit() {
-        // console.log(this.form.value);
         // Extra check; if user enables button through devtools
         if (!this.form.valid) {
             return;
@@ -55,28 +54,16 @@ export class AuthComponent implements OnInit, OnDestroy{
         const email = this.form.value.email;
         const password = this.form.value.password;
 
-        // let authObs: Observable<AuthResponseData>;
-        
         if (this.isLoginMode) {
-            // authObs = this.authService.login(email, password)
-            this.store.dispatch(AuthActions.loginStart({email: email, password: password}));
-                
-        } else {
-            // authObs = this.authService.signUp(email, password)
-        }
+            this.store.dispatch(
+                AuthActions.loginStart({ email: email, password: password })
+            );
 
-        // authObs.subscribe({
-        //     next: (resp) => {
-        //         console.log(resp);
-        //         this.isLoading = false;
-        //         this.router.navigate(['/recipes']);
-        //     },
-        //     error: (errorMsg) => {
-        //         console.log(errorMsg)
-        //         this.error = errorMsg;
-        //         this.isLoading = false;
-        //     }
-        // })
+        } else {
+            this.store.dispatch(
+                AuthActions.signup({ email, password })
+            )
+        }
 
         this.form.reset();
     }
@@ -86,7 +73,7 @@ export class AuthComponent implements OnInit, OnDestroy{
     }
 
     ngOnDestroy() {
-        if(this.storeSubscription) {
+        if (this.storeSubscription) {
             this.storeSubscription.unsubscribe()
         }
     }

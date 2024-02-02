@@ -21,7 +21,7 @@ export const authReducer = createReducer(
     // after making the http request
     on(
         AuthActions.loginStart,
-        // AuthActions.signup,
+        AuthActions.signup,
         (state) => ({
             ...state,
             // user: new User(email, userId, token, expirationDate)

@@ -13,7 +13,6 @@ export const loginStart = createAction(
 export const signup = createAction(
     '[Auth] Signup',
     props<{ 
-        // user: User
         email: string;
         password: string;
     }>()

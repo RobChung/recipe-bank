@@ -115,6 +115,37 @@ export class AuthEffects {
         // { dispatch: false }
     )
 
+    authSignup$ = createEffect(() => 
+        this.actions$.pipe(
+            ofType(AuthActions.signup),
+            switchMap(action => {
+                return this.http.post<AuthResponseData>(
+                    `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`,
+                    {
+                        email: action.email,
+                        password: action.password,
+                        returnSecureToken: true
+                    })
+                    .pipe(
+                        map(resData => {
+                            // console.log(resData)
+                            return handleAuthentication(
+                                resData.email,
+                                resData.localId,
+                                resData.idToken,
+                                +resData.expiresIn
+                            )
+                        }),
+                        // Unlike map(), catchError does not wrap what you return into an Observable
+                        // use of() here, or in the handleError method, return those actions wrapped in of()
+                        catchError(error => {
+                            return handleError(error)
+                        }),
+                    )
+            }),
+        ) 
+    )
+
     authSuccess$ = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthActions.authenticateSuccess),
