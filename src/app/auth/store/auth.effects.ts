@@ -167,7 +167,7 @@ export class AuthEffects {
                 } = JSON.parse(localStorage.getItem('userData'));
                 
                 if (!userData) {
-                    return;
+                    return { type: 'DUMMY' };
                 }
                 
                 const loadedUser = new User(
@@ -180,16 +180,18 @@ export class AuthEffects {
                 if (loadedUser.token) {
                     // emit this user
                     // this.user$.next(loadedUser);
-                    // this.store.dispatch(AuthActions.login({user: loadedUser}));
+                    return AuthActions.authenticateSuccess({ user: loadedUser })
                     // Calculate the remaining time
-                    const remainingTime = 
-                        new Date(userData._tokenExpirationDate).getTime() 
-                        - new Date().getTime()
+                    // const remainingTime = 
+                    //     new Date(userData._tokenExpirationDate).getTime() 
+                    //     - new Date().getTime()
                     // this.autoLogout(remainingTime);
-                    console.log(remainingTime);
+                    // console.log(remainingTime);
                 }
+                // Need a default return; needs a type property as that indicates it is a valid Action
+                return { type: 'DUMMY' }
             })
-        ), { dispatch: false }
+        )
     )
 
     authLogout$ = createEffect(() => 
