@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { AuthService } from "./auth.service";
-import { Observable, Subscription } from "rxjs";
-import { Router } from "@angular/router";
+import { FormBuilder, Validators } from "@angular/forms";
+import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 import * as AuthActions from "./store/auth.actions";
 import * as fromApp from "../store/app.reducer";
@@ -27,8 +25,6 @@ export class AuthComponent implements OnInit, OnDestroy {
 
     constructor(
         private fb: FormBuilder,
-        private authService: AuthService,
-        private router: Router,
         private store: Store<fromApp.AppState>) { }
 
     ngOnInit() {

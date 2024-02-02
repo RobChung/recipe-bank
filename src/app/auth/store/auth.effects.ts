@@ -5,7 +5,7 @@ import { User } from "../user.model";
 import { catchError, map, switchMap, tap } from "rxjs/operators";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { environment } from "../../../environments/environment.development";
-import { of, throwError } from "rxjs";
+import { of } from "rxjs";
 import { Router } from "@angular/router";
 import { AuthService } from "../auth.service";
 

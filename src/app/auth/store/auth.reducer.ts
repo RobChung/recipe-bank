@@ -39,19 +39,6 @@ export const authReducer = createReducer(
         })
     ),
 
-    // on(
-    //     AuthActions.authenticateSuccess, (state, {email, id, token, tokenExpirationDate}) => ({
-    //         ...state,
-    //         user: new User(
-    //             email,
-    //             id,
-    //             token,
-    //             tokenExpirationDate
-    //         ),
-    //         authError: null
-    //     })
-    // )
-
     on(
         AuthActions.authenticateSuccess, (state, {user}) => ({
             ...state,
@@ -76,11 +63,4 @@ export const authReducer = createReducer(
             authError: null
         })
     ),
-
-    // on(
-    //     AuthActions.autoLogin, (state) => ({
-    //         ...state,
-
-    //     })
-    // )
 )
