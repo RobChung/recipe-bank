@@ -38,53 +38,6 @@ export class AuthService {
         private router: Router,
         private store: Store<fromApp.AppState>) { }
 
-    signUp(email: string, password: string) {
-        // The request body must include three properties as specified by the API:
-        // email, password, returnSecureToken
-        return this.http.post<AuthResponseData>(
-            `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.apiKey}`,
-            {
-                email: email,
-                password: password,
-                returnSecureToken: true
-            }
-        ).pipe(
-            catchError(this.handleError), // See catchError in login for other syntax/approach
-            tap((resData) => {
-                this.handleAuthentication(
-                    resData.email, 
-                    resData.localId, 
-                    resData.idToken, 
-                    +resData.expiresIn
-                );
-            })
-        );
-    }
-
-    login(email: string, password: string) {
-
-        return this.http.post<AuthResponseData>(
-            `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.apiKey}`,
-            {
-                email: email,
-                password: password,
-                returnSecureToken: true
-            }
-        ).pipe(
-            catchError(((error) => {
-                console.log(error)
-              return this.handleError(error)
-            })),
-            tap((resData) => {
-                this.handleAuthentication(
-                    resData.email, 
-                    resData.localId, 
-                    resData.idToken, 
-                    +resData.expiresIn
-                );
-            })
-        );
-    }
 
     logout() {
         // this.user$.next(null);
@@ -137,73 +90,6 @@ export class AuthService {
         this.tokenExpirationTimer = setTimeout(() => {
           this.logout();
         }, expirationDuration)
-    }
-
-    private handleAuthentication(
-        email: string, 
-        id: string, 
-        token: string, 
-        expiresIn: number) {
-        // the expiration date is not part of the resp, so we will create it,
-        // and it also needs to be based on the Firebase response we receive
-        // this should be the number of seconds for which it will expire,
-        // as a string get the current date, call getTime() to get 
-        // current timestamp in milliseconds then add the response's expiresIn
-        // payload in milliseconds
-        // convert the string to a number before adding, then convert back 
-        // to a Date object for a concrete timestamp, so wrap it all in new Date()
-        const expirationDate = new Date(new Date().getTime() + +expiresIn * 1000);
-        const user = new User(
-            email,
-            id,
-            token,
-            expirationDate
-        );
-        // emit the currently logged in User
-        // this.user$.next(user);
-        // this.store.dispatch(AuthActions.login({ user: user }));
-        this.autoLogout(expiresIn * 1000) // Convert to ms
-        // To allow persistence, convert JS object to a string
-        localStorage.setItem('userData', JSON.stringify(user));
-    }
-
-    // Function to handle error responses received from Http Requests
-    private handleError(errorResp: HttpErrorResponse) {
-        const error = errorResp.error.error;
-        let errorMsg = 'An unknown error occurred';
-
-        // Error is not in expected format
-        if (!errorResp) {
-            // throw new Error(errorMsg);
-            return throwError(() => errorMsg)
-        }
-
-        // Firebase lists common errors with the sign up email/password API
-        switch (error.message) {
-            case 'EMAIL_EXISTS':
-                errorMsg = 'This email already exists.'
-                break;
-
-            case 'INVALID_LOGIN_CREDENTIALS':
-                errorMsg = 'Credentials are invalid, please ensure they are correct and try again.'
-                break;
-                
-            // Two cases below have now been collapsed into one, see case above
-            case 'EMAIL_NOT_FOUND':
-                errorMsg = 'This email does not exist.'
-                break;
-            
-            case 'INVALID_PASSWORD':
-                errorMsg = 'Password entered was invalid.'
-                break;
-
-            default:
-                errorMsg = `An unexpected error occurred: ${error.message}`
-                break;
-        }
-        // more correct?
-        // throw new Error(errorMsg)
-        return throwError(() => errorMsg);
     }
 
 }

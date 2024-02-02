@@ -42,3 +42,7 @@ export const authenticateFail = createAction(
 export const clearError = createAction(
     '[Auth] Clear Error'
 )
+
+export const autoLogin = createAction(
+    '[Auth] Auto Login'
+)

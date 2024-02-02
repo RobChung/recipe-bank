@@ -5,6 +5,7 @@ import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import * as fromApp from "../store/app.reducer";
+import * as AuthActions from "../auth/store/auth.actions";
 
 @Component({
     selector: 'app-header',
@@ -49,11 +50,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     onLogout() {
-        this.authService.logout();
-        // Instead of redirecting here, this will be managed in the AuthService.
-        // This is because the User may be logged out if token expires as well, so
-        // it will not only occur upon clicking the button in the HeaderComponent
-        // this.router.navigate(['/auth']);
+        this.store.dispatch(AuthActions.logout());
     }
 
     ngOnDestroy() {

@@ -146,11 +146,58 @@ export class AuthEffects {
         ) 
     )
 
-    authSuccess$ = createEffect(() =>
+    authRedirect$ = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthActions.authenticateSuccess),
             tap(() => {
                 this.router.navigate(['/']);
+            })
+        ), { dispatch: false }
+    )
+
+    autoLogin$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuthActions.autoLogin),
+            map(() => {
+                const userData: {
+                    email: string;
+                    id: string;
+                    _token: string;
+                    _tokenExpirationDate: string;
+                } = JSON.parse(localStorage.getItem('userData'));
+                
+                if (!userData) {
+                    return;
+                }
+                
+                const loadedUser = new User(
+                    userData.email,
+                    userData.id,
+                    userData._token,
+                    new Date(userData._tokenExpirationDate)
+                );
+
+                if (loadedUser.token) {
+                    // emit this user
+                    // this.user$.next(loadedUser);
+                    // this.store.dispatch(AuthActions.login({user: loadedUser}));
+                    // Calculate the remaining time
+                    const remainingTime = 
+                        new Date(userData._tokenExpirationDate).getTime() 
+                        - new Date().getTime()
+                    // this.autoLogout(remainingTime);
+                    console.log(remainingTime);
+                }
+            })
+        ), { dispatch: false }
+    )
+
+    authLogout$ = createEffect(() => 
+        this.actions$.pipe(
+            ofType(AuthActions.logout),
+            tap(() => {
+                localStorage.removeItem('userData')
+                this.router.navigate(['/auth'])
             })
         ), { dispatch: false }
     )

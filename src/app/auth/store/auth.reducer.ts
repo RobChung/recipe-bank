@@ -75,5 +75,12 @@ export const authReducer = createReducer(
             ...state,
             authError: null
         })
-    )
+    ),
+
+    // on(
+    //     AuthActions.autoLogin, (state) => ({
+    //         ...state,
+
+    //     })
+    // )
 )
