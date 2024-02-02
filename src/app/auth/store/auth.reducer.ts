@@ -68,5 +68,12 @@ export const authReducer = createReducer(
             authError: errorMsg,
             loading: false
         })
+    ),
+
+    on(
+        AuthActions.clearError, (state) => ({
+            ...state,
+            authError: null
+        })
     )
 )

@@ -38,3 +38,7 @@ export const authenticateFail = createAction(
     '[Auth] Auth Fail',
     props<{ errorMsg: string }>()
 )
+
+export const clearError = createAction(
+    '[Auth] Clear Error'
+)
