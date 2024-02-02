@@ -7,6 +7,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { environment } from "../../../environments/environment.development";
 import { of, throwError } from "rxjs";
 import { Router } from "@angular/router";
+import { AuthService } from "../auth.service";
 
 
 export interface AuthResponseData {
@@ -94,6 +95,9 @@ export class AuthEffects {
                         returnSecureToken: true
                     })
                     .pipe(
+                        tap((resData) => {
+                            this.authService.setLogoutTimer(+resData.expiresIn * 1000)
+                        }),
                         map(resData => {
                             // console.log(resData)
                             return handleAuthentication(
@@ -115,7 +119,7 @@ export class AuthEffects {
         // { dispatch: false }
     )
 
-    authSignup$ = createEffect(() => 
+    authSignup$ = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthActions.signup),
             switchMap(action => {
@@ -127,6 +131,9 @@ export class AuthEffects {
                         returnSecureToken: true
                     })
                     .pipe(
+                        tap((resData) => {
+                            this.authService.setLogoutTimer(+resData.expiresIn * 1000)
+                        }),
                         map(resData => {
                             // console.log(resData)
                             return handleAuthentication(
@@ -143,7 +150,7 @@ export class AuthEffects {
                         }),
                     )
             }),
-        ) 
+        )
     )
 
     authRedirect$ = createEffect(() =>
@@ -165,11 +172,11 @@ export class AuthEffects {
                     _token: string;
                     _tokenExpirationDate: string;
                 } = JSON.parse(localStorage.getItem('userData'));
-                
+
                 if (!userData) {
                     return { type: 'DUMMY' };
                 }
-                
+
                 const loadedUser = new User(
                     userData.email,
                     userData.id,
@@ -178,15 +185,13 @@ export class AuthEffects {
                 );
 
                 if (loadedUser.token) {
-                    // emit this user
-                    // this.user$.next(loadedUser);
-                    return AuthActions.authenticateSuccess({ user: loadedUser })
                     // Calculate the remaining time
-                    // const remainingTime = 
-                    //     new Date(userData._tokenExpirationDate).getTime() 
-                    //     - new Date().getTime()
-                    // this.autoLogout(remainingTime);
-                    // console.log(remainingTime);
+                    const remainingTime = 
+                        new Date(userData._tokenExpirationDate).getTime() 
+                        - new Date().getTime()
+                    this.authService.setLogoutTimer(remainingTime);
+                    console.log(remainingTime);
+                    return AuthActions.authenticateSuccess({ user: loadedUser })
                 }
                 // Need a default return; needs a type property as that indicates it is a valid Action
                 return { type: 'DUMMY' }
@@ -194,10 +199,11 @@ export class AuthEffects {
         )
     )
 
-    authLogout$ = createEffect(() => 
+    authLogout$ = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthActions.logout),
             tap(() => {
+                this.authService.clearLogoutTimer();
                 localStorage.removeItem('userData')
                 this.router.navigate(['/auth'])
             })
@@ -207,5 +213,6 @@ export class AuthEffects {
     constructor(
         private actions$: Actions,
         private http: HttpClient,
-        private router: Router) { }
+        private router: Router,
+        private authService: AuthService) { }
 }
