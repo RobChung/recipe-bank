@@ -10,7 +10,7 @@ import * as ShoppingListActions from '../../shopping-list/store/shopping-list.ac
 // import * as fromShoppingList from '../../shopping-list/store/shopping-list.reducer';
 import * as fromApp from '../../store/app.reducer';
 import * as RecipesActions from '../store/recipe.actions';
-import { map } from 'rxjs';
+import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -35,25 +35,23 @@ export class RecipeDetailComponent implements OnInit {
 
   ngOnInit() {
 
-    this.route.params.subscribe(
-      (params: Params) => {
-        this.id = +params['id'];
-        // this.recipe = this.recipeService.getRecipe(this.id);
-
-        // create a new observable chain
-        this.store
-          .select('recipes')
-          .pipe(
-            map(recipeState => {
-              // we want a single recipe for the given id
-              return recipeState.recipes[this.id]
-            })
-          )
-          .subscribe( recipe => {
-            this.recipe = recipe
-          })
-      }
-    )
+    this.route.params
+      .pipe(
+        map(params => {
+          return +params['id'];
+        }),
+        switchMap(id => {
+          this.id = id;
+          return this.store.select('recipes');
+        }),
+        map(recipeState => {
+          // we want a single recipe for the given id
+          return recipeState.recipes[this.id]
+        })
+      )
+      .subscribe(recipe => {
+        this.recipe = recipe
+      })
   }
 
   onEditRecipe() {
