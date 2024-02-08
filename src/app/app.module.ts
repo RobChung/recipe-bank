@@ -8,11 +8,13 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { StoreModule } from '@ngrx/store';
-import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
-import { authReducer } from './auth/store/auth.reducer';
-import * as fromApp from './store/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { StoreRouterConnectingModule } from "@ngrx/router-store";
 import { AuthEffects } from './auth/store/auth.effects';
+import * as fromApp from './store/app.reducer';
+import { environment } from 'src/environments/environment.development';
+
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { AuthEffects } from './auth/store/auth.effects';
     // in order with regards to how their related routing modules are imported
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects])
+    EffectsModule.forRoot([AuthEffects]),
+    StoreDevtoolsModule.instrument({logOnly: environment.production}),
+    StoreRouterConnectingModule.forRoot()
   ],
   providers: [
     // ShoppingListService -> added argument in Injectable()
