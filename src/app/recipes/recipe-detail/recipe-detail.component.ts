@@ -9,6 +9,8 @@ import { DataStorageService } from 'src/app/shared/data-storage-service';
 import * as ShoppingListActions from '../../shopping-list/store/shopping-list.actions';
 // import * as fromShoppingList from '../../shopping-list/store/shopping-list.reducer';
 import * as fromApp from '../../store/app.reducer';
+import * as RecipesActions from '../store/recipe.actions';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -26,30 +28,36 @@ export class RecipeDetailComponent implements OnInit {
 
   // constructor(private shoppingListService: ShoppingListService) {};
   constructor(private recipeService: RecipeService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private dataService: DataStorageService,
-              private store: Store<fromApp.AppState>) { };
+    private route: ActivatedRoute,
+    private router: Router,
+    private dataService: DataStorageService,
+    private store: Store<fromApp.AppState>) { };
 
   ngOnInit() {
 
-    // const id = +this.route.snapshot.params['id']
-    // this.recipe = this.recipeService.getRecipe(id)
-
     this.route.params.subscribe(
       (params: Params) => {
-        // this.recipe = this.recipeService.getRecipe(+params['id']);
-        // console.log(params)
         this.id = +params['id'];
-        // console.log('detailed recipe: ', this.recipeService.getRecipe(this.id));
-        this.recipe = this.recipeService.getRecipe(this.id);
+        // this.recipe = this.recipeService.getRecipe(this.id);
 
+        // create a new observable chain
+        this.store
+          .select('recipes')
+          .pipe(
+            map(recipeState => {
+              // we want a single recipe for the given id
+              return recipeState.recipes[this.id]
+            })
+          )
+          .subscribe( recipe => {
+            this.recipe = recipe
+          })
       }
     )
   }
 
   onEditRecipe() {
-    this.router.navigate(['edit'], {relativeTo: this.route});
+    this.router.navigate(['edit'], { relativeTo: this.route });
     // go up to one level (/recipes), then append the id and 'edit'
     // this.router.navigate(['../', this.id, 'edit'], {relativeTo: this.route});
   }

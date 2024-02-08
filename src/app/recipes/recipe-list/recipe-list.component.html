@@ -25,7 +25,7 @@
             </span>
         </a> -->
         <!-- Need to go up one more level thus another event is needed -->
-        <div *ngIf="recipes?.length > 0; else noRecipes">
+        <div *ngIf="recipes.length > 0; else noRecipes">
             <app-recipe-item 
                 *ngFor="let recipeElement of recipes; let i = index"
                 [recipe]="recipeElement"

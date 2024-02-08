@@ -13,6 +13,9 @@ import { Recipe } from "../recipes/recipe.model";
 import { RecipeService } from "../recipes/service/recipe.service";
 import { exhaustMap, map, take, tap } from "rxjs";
 import { AuthService } from "../auth/auth.service";
+import { Store } from "@ngrx/store";
+import * as fromApp from "../store/app.reducer";
+import * as RecipeActions from "../recipes/store/recipe.actions";
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +28,7 @@ export class DataStorageService {
     constructor(
         private http: HttpClient,
         private recipesService: RecipeService,
-        private authService: AuthService) { }
+        private store: Store<fromApp.AppState>) { }
 
     storeRecipes() {
         const recipes = this.recipesService.getRecipes();
@@ -100,7 +103,8 @@ export class DataStorageService {
                     if (recipes.length < 1) {
                         alert('No recipes to fetch!');
                     }
-                    this.recipesService.setRecipes(recipes);
+                    // this.recipesService.setRecipes(recipes);
+                    this.store.dispatch(RecipeActions.setRecipes({ recipes }));
                 })
             )
 
