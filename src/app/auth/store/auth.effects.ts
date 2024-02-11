@@ -36,7 +36,7 @@ const handleAuthentication = (
     localStorage.setItem('userData', JSON.stringify(user));
     // Either approach work depending on structure of Action --> which is ideal tho??
     // return AuthActions.authenticateSuccess({email: email, id: id, token: token, tokenExpirationDate: expirationDate})
-    return AuthActions.authenticateSuccess({ user: user })
+    return AuthActions.authenticateSuccess({ user: user, redirect: true })
 }
 
 const handleError = (
@@ -156,8 +156,10 @@ export class AuthEffects {
     authRedirect$ = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthActions.authenticateSuccess),
-            tap(() => {
-                this.router.navigate(['/']);
+            tap((authSuccessAction) => {
+                if (authSuccessAction.redirect) {
+                    this.router.navigate(['/']);
+                }
             })
         ), { dispatch: false }
     )
@@ -186,12 +188,12 @@ export class AuthEffects {
 
                 if (loadedUser.token) {
                     // Calculate the remaining time
-                    const remainingTime = 
-                        new Date(userData._tokenExpirationDate).getTime() 
+                    const remainingTime =
+                        new Date(userData._tokenExpirationDate).getTime()
                         - new Date().getTime()
                     this.authService.setLogoutTimer(remainingTime);
                     console.log(remainingTime);
-                    return AuthActions.authenticateSuccess({ user: loadedUser })
+                    return AuthActions.authenticateSuccess({ user: loadedUser, redirect: false })
                 }
                 // Need a default return; needs a type property as that indicates it is a valid Action
                 return { type: 'DUMMY' }
