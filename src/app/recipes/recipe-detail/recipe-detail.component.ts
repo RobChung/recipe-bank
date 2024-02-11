@@ -5,8 +5,9 @@ import { map, switchMap } from 'rxjs';
 import { RecipeService } from '../service/recipe.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DataStorageService } from 'src/app/shared/data-storage-service';
-import * as ShoppingListActions from '../../shopping-list/store/shopping-list.actions';
 import * as fromApp from '../../store/app.reducer';
+import * as ShoppingListActions from '../../shopping-list/store/shopping-list.actions';
+import * as RecipeActions from '../store/recipe.actions';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -63,8 +64,8 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onDeleteRecipe() {
-    this.recipeService.deleteRecipe(this.id);
-    // this.router.navigate(['..']);
+    // this.recipeService.deleteRecipe(this.id);
+    this.store.dispatch(RecipeActions.deleteRecipe({ index: this.id }))
     this.router.navigate(['/recipes']);
   }
 

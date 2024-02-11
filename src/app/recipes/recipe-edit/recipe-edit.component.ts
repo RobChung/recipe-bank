@@ -5,6 +5,7 @@ import { Subscription, map, switchMap } from 'rxjs';
 import { RecipeService } from '../service/recipe.service';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
+import * as RecipeActions from '../store/recipe.actions';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -95,9 +96,22 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   onSubmit() {
 
     if (this.editMode) {
-      this.recipeService.updateRecipe(this.id, this.recipeEditForm.value);
+      // this.recipeService.updateRecipe(this.id, this.recipeEditForm.value);
+      this.store.dispatch(
+        RecipeActions.updateRecipe(
+          {
+            index: this.id,
+            recipe: this.recipeEditForm.value
+          }
+        )
+      )
     } else {
-      this.recipeService.addRecipe(this.recipeEditForm.value);
+      // this.recipeService.addRecipe(this.recipeEditForm.value);
+      this.store.dispatch(
+        RecipeActions.addRecipe(
+          { recipe: this.recipeEditForm.value }
+        )
+      )
     }
 
     this.navigateBack();

@@ -13,11 +13,15 @@ export const addRecipe = createAction(
 
 export const updateRecipe = createAction(
     '[Recipe] Update Recipe',
-    props<{ recipe: Recipe }>()
+    props<{
+        index: number, 
+        recipe: Recipe
+     }>()
 )
 
 export const deleteRecipe = createAction(
-    '[Recipe] Delete Recipe'
+    '[Recipe] Delete Recipe',
+    props<{index: number}>()
 )
 
 export const fetchRecipes = createAction(
