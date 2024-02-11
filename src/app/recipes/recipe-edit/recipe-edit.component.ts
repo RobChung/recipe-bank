@@ -19,7 +19,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   recipeEditForm: FormGroup;
 
-  private storeSub: Subscription
+  storeSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -152,6 +152,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.storeSub.unsubscribe();
+    if (this.storeSub) {
+      this.storeSub.unsubscribe();
+    }
   }
 }
