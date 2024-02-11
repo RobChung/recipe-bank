@@ -23,7 +23,7 @@ import * as RecipeActions from "../recipes/store/recipe.actions";
 export class DataStorageService {
 
     dbUrl: string = 'https://ng-recipe-bank-default-rtdb.firebaseio.com/recipes'
-    suffixUrl: string = '.json'
+    suffixUrl: string = '.json'  // Required for Firebase
 
     constructor(
         private http: HttpClient,

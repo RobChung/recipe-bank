@@ -1,16 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../recipe.model';
 import { Store } from '@ngrx/store';
-// import { Ingredient } from 'src/app/shared/ingredient.model';
-// import { ShoppingListService } from 'src/app/shopping-list/service/shopping-list.service';
+import { map, switchMap } from 'rxjs';
 import { RecipeService } from '../service/recipe.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DataStorageService } from 'src/app/shared/data-storage-service';
 import * as ShoppingListActions from '../../shopping-list/store/shopping-list.actions';
-// import * as fromShoppingList from '../../shopping-list/store/shopping-list.reducer';
 import * as fromApp from '../../store/app.reducer';
-import * as RecipesActions from '../store/recipe.actions';
-import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -59,15 +55,6 @@ export class RecipeDetailComponent implements OnInit {
     // go up to one level (/recipes), then append the id and 'edit'
     // this.router.navigate(['../', this.id, 'edit'], {relativeTo: this.route});
   }
-
-  // Can use either RecipeService or ShoppingListService (but how to use latter??? ListUI in List Component not updating)
-  // addToShoppingList() {
-  //   this.recipe.ingredients.forEach(ingredient => {
-  //     console.log(ingredient)
-  //     this.shoppingListService.onAddToList(ingredient);
-  //   });
-  //   console.log(this.shoppingListService.getIngredients())
-  // }
 
   addToShoppingList() {
     // this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);

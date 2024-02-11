@@ -14,6 +14,7 @@ import { StoreRouterConnectingModule } from "@ngrx/router-store";
 import { AuthEffects } from './auth/store/auth.effects';
 import * as fromApp from './store/app.reducer';
 import { environment } from 'src/environments/environment.development';
+import { RecipeEffects } from './recipes/store/recipe.effects';
 
 
 @NgModule({
@@ -30,7 +31,7 @@ import { environment } from 'src/environments/environment.development';
     // in order with regards to how their related routing modules are imported
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot([AuthEffects, RecipeEffects]),
     StoreDevtoolsModule.instrument({logOnly: environment.production}),
     StoreRouterConnectingModule.forRoot()
   ],
