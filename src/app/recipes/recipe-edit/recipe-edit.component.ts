@@ -19,6 +19,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   recipeEditForm: FormGroup;
 
+  private storeSub: Subscription
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -57,7 +59,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
     if (this.editMode) {
       // const recipe = this.recipeService.getRecipe(this.id);
-      this.store.select('recipes')
+      this.storeSub = this.store.select('recipes')
         .pipe(
           map(recipeState => {
             // we want a single recipe for the given id
@@ -150,5 +152,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.storeSub.unsubscribe();
   }
 }
