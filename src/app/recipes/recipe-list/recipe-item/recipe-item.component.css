@@ -3,12 +3,6 @@
 } */
 
 span > img {
-
-    width: auto;
-
+    max-height: 50px;
+    width: 50px;
 }
-
-/* img {
-    max-height: 300px;
-    max-width: 300px;
-} */
