@@ -1,0 +1,4 @@
+/* Remove the bottom margin to prevent white bar from appearing  */
+.navbar.navbar-default {
+    margin-bottom: 0;
+}

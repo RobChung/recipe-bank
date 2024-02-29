@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AuthResponseData, AuthService } from "./auth.service";
 import { Observable } from "rxjs";
 import { Router } from "@angular/router";
+import { useDevice } from "../shared/interfaces/device-state";
 
 @Component({
     selector: 'app-auth',
@@ -10,6 +11,7 @@ import { Router } from "@angular/router";
 })
 export class AuthComponent {
 
+    isMobile: boolean;
     isLoginMode = true;
     isLoading = false;
     error: string = null;
@@ -20,10 +22,15 @@ export class AuthComponent {
         // Using Firebase's ReST API for auth requires at least 6 chars
         password: [null, [Validators.required, Validators.minLength(6)]]
     })
+
     constructor(
         private fb: FormBuilder,
         private authService: AuthService,
         private router: Router) { }
+
+    ngOnInit() {
+        this.isMobile = useDevice().isMobile;
+    }
 
     switchMode() {
         this.isLoginMode = !this.isLoginMode

@@ -2,7 +2,9 @@
 <!-- <app-header (featureSelected)="onNavigate($event)"></app-header> -->
 <app-header></app-header>
 
-<div class="container">
+<div 
+  class="container"
+  [ngClass]="{setBgColor: isAuthenticated}">
   <div class="row">
     <div class="col-md-12">
       <!-- <h2>I'm working!</h2> -->
@@ -10,5 +12,10 @@
       <!-- <app-shopping-list *ngIf="loadedFeature !== 'recipe'"></app-shopping-list> -->
       <router-outlet></router-outlet>
     </div>
+    
+    <!-- <div *ngIf="isMobile">
+      <img src="../assets/nomnom.png">  
+    </div> -->
+
   </div>
 </div>
