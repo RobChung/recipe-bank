@@ -1,0 +1,7 @@
+.container {
+    display: grid;
+}
+
+.logo {
+    justify-self: center;
+}

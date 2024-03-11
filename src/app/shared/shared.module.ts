@@ -4,12 +4,14 @@ import { LoadingSpinnerComponent } from "./loading-spinner/loading-spinner.compo
 import { DropdownDirective } from "./dropdown.directive";
 import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
+import { LogoComponent } from './logo/logo.component';
 
 @NgModule({
     declarations: [
         AlertComponent,
         LoadingSpinnerComponent,
-        DropdownDirective
+        DropdownDirective,
+        LogoComponent
     ],
     imports: [
         CommonModule,
@@ -20,7 +22,8 @@ import { ReactiveFormsModule } from "@angular/forms";
         LoadingSpinnerComponent,
         DropdownDirective,
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        LogoComponent
     ]
 })
 export class SharedModule { }

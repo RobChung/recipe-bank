@@ -1,54 +1,55 @@
-<div class="row">
-    <div class="col-xs-12 col-md-6 col-md-offset-3">
-        <!-- <div class="alert alert-danger" *ngIf="error">
-            <span> {{ error }} </span>
-        </div> -->
-        <app-alert 
-            [message]="error" 
-            *ngIf="error" 
-            (closeAlert)="onCloseAlert()">
-        </app-alert>
-        <div style="text-align: center;" *ngIf="isLoading">
-            <app-loading-spinner></app-loading-spinner>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <!-- <div class="alert alert-danger" *ngIf="error">
+                <span> {{ error }} </span>
+            </div> -->
+            <app-alert 
+                [message]="error" 
+                *ngIf="error" 
+                (closeAlert)="onCloseAlert()">
+            </app-alert>
+            <div style="text-align: center;" *ngIf="isLoading">
+                <app-loading-spinner></app-loading-spinner>
+            </div>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        id="email"
+                        class="form-control"
+                        formControlName="email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-control"
+                        formControlName="password">
+                </div>
+                <div>
+                    <button 
+                        class="btn btn-primary" 
+                        type="submit" 
+                        [disabled]="!form.valid">
+                            {{ isLoginMode ?  'Login' : 'Sign Up' }}
+                    </button> 
+                    |
+                    <button 
+                        class="btn btn-primary" 
+                        type="button" 
+                        (click)="switchMode()"> 
+                            Switch Mode 
+                    </button>
+                </div>
+            </form>
         </div>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input 
-                    type="email" 
-                    id="email"
-                    class="form-control"
-                    formControlName="email">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    class="form-control"
-                    formControlName="password">
-            </div>
-            <div>
-                <button 
-                    class="btn btn-primary" 
-                    type="submit" 
-                    [disabled]="!form.valid">
-                        {{ isLoginMode ?  'Login' : 'Sign Up' }}
-                </button> 
-                |
-                <button 
-                    class="btn btn-primary" 
-                    type="button" 
-                    (click)="switchMode()"> 
-                        Switch Mode 
-                </button>
-            </div>
-        </form>
+    </div>
+    <br>
+    <div class="logo">
+        <app-logo></app-logo>
     </div>
 </div>
-<br>
-<div class="row">
-    <!-- <div *ngIf="isMobile"> -->
-        <img src="../assets/nomnom.png">  
-    <!-- </div> -->
-</div>
+
