@@ -7,6 +7,7 @@ import { RecipeService } from '../service/recipe.service';
 import { Recipe } from '../recipe.model';
 import { ShoppingListService } from 'src/app/shopping-list/service/shopping-list.service';
 import { DataStorageService } from 'src/app/shared/data-storage-service';
+import { useDevice } from 'src/app/shared/interfaces/device-state';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -19,6 +20,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   editMode = false;
   subscription: Subscription;
   recipeEditForm: FormGroup;
+  isMobile = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,6 +30,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     private dataService: DataStorageService) { }
 
   ngOnInit() {
+    this.isMobile = useDevice().isMobile
+
     this.subscription = this.route.params.subscribe(
       (params: Params) => {
         this.id = +params['id'];
